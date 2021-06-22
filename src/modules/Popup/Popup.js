@@ -13,6 +13,7 @@ import {
   customPropTypes,
   getElementType,
   getUnhandledProps,
+  isBrowser,
   makeDebugger,
   SUI,
   useKeyOnly,
@@ -73,6 +74,9 @@ export default class Popup extends Component {
 
     /** Invert the colors of the Popup. */
     inverted: PropTypes.bool,
+
+    /** The node where the popup should mount. Defaults to document.body. */
+    mountNode: PropTypes.any,
 
     /** Offset value to apply to rendered popup. Accepts the following units:
      * - px or unit-less, interpreted as pixels
@@ -195,6 +199,9 @@ export default class Popup extends Component {
   componentWillUnmount() {
     clearTimeout(this.timeoutId)
   }
+
+  // Do not access document when server side rendering
+  getMountNode = () => (isBrowser() ? this.props.mountNode || document.body : null)
 
   getPortalProps = () => {
     debug('getPortalProps()')
@@ -340,6 +347,7 @@ export default class Popup extends Component {
       trigger,
     } = this.props
     const { closed, portalRestProps } = this.state
+    const mountNode = this.getMountNode()
 
     if (closed || disabled) return trigger
 
@@ -362,6 +370,7 @@ export default class Popup extends Component {
     return (
       <Portal
         {...mergedPortalProps}
+        mountNode={mountNode}
         onClose={this.handleClose}
         onMount={this.handlePortalMount}
         onOpen={this.handleOpen}

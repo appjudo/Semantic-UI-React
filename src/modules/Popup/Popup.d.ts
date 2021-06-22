@@ -49,6 +49,9 @@ export interface StrictPopupProps extends StrictPortalProps {
   /** Invert the colors of the popup */
   inverted?: boolean
 
+  /** The node where the popup should mount. Defaults to document.body. */
+  mountNode?: any
+
   /** Offset value to apply to rendered popup. Accepts the following units:
    * - px or unit-less, interpreted as pixels
    * - %, percentage relative to the length of the trigger element
